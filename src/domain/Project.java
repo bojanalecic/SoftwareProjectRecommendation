@@ -4,6 +4,7 @@
  */
 package domain;
 
+import edu.uci.ics.jung.graph.Graph;
 import java.net.URI;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -45,9 +46,12 @@ public class Project extends Thing {
     private Person maintainer;
     
     private LinkedList<String> keywords;
+    private LinkedList<String> relevantWords;
+    private Graph graph;
 
     public Project() {
         keywords = new LinkedList<>();
+        relevantWords = new LinkedList<>();
     }
 
     public Project(String name, String description, URI adress, URI downloadLink, URI homePage, List<String> tags, List<String> licenses, List<String> programmingLanguages, List<String> operatingSystems, List<Version> releaseList) {
@@ -63,6 +67,7 @@ public class Project extends Thing {
         this.os = operatingSystems;
         this.release = releaseList;
         keywords = new LinkedList<>();
+        relevantWords = new LinkedList<>();
     }
 
     /**
@@ -226,4 +231,22 @@ public class Project extends Thing {
     public void setKeywords(LinkedList<String> keywords) {
         this.keywords = keywords;
     }
+    
+    public LinkedList<String> getRelevantWords() {
+        return relevantWords;
+    }
+
+    public void setRelevantWords(LinkedList<String> relevantWords) {
+        this.relevantWords = relevantWords;
+    }
+
+    public Graph getGraph() {
+        return graph;
+    }
+
+    public void setGraph(Graph graph) {
+        this.graph = graph;
+    }
+    
+    
 }

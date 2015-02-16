@@ -21,6 +21,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.lucene.analysis.StopAnalyzer;
 import persistence.query.QueryStore;
+import util.GraphOperations;
+import util.StringOperations;
 
 /**
  *
@@ -35,11 +37,13 @@ public class SoftwareProjects {
         try {
             // TODO code application logic here
             LinkedList<Project> projectsWithDesc = getProjectsWithDescription();
-
-            System.out.println(projectsWithDesc.size());
             
-            extractKeywords(projectsWithDesc);
-            createGraph();
+            StringOperations so = new StringOperations(projectsWithDesc);
+            so.prepareTextForGraph();
+            
+            GraphOperations go = new GraphOperations(projectsWithDesc);
+            go.createGraphForEachProject();
+            
             
         } catch (URISyntaxException ex) {
             Logger.getLogger(SoftwareProjects.class.getName()).log(Level.SEVERE, null, ex);
@@ -58,72 +62,8 @@ public class SoftwareProjects {
         return projectsWithDesc;
     }
 
-    private static void extractKeywords(LinkedList<Project> projectsWithDesc) {
-        for (Project project : projectsWithDesc) {
-            project.setDescription(project.getDescription().toLowerCase());
-            
-            //   ArrayList<String> wordsCorrect = removeShortWords(words);
-           
-            project.setDescription(removeStopWords(project.getDescription()));
-           // Graph g = new DirectedSparseGraph();
-            
-        }
-    }
+   
+
     
-    public static ArrayList removeDuplicates(String[] source){
-    ArrayList<String> newList = new ArrayList<String>();
-    for (int i=0; i<source.length; i++){
-        String s = source[i];
-        if (!newList.contains(s) && s.length() > 2){
-            newList.add(s);
-        }
-    }
-    return newList;
-}
-
-    private static String removeStopWords(String source) {
-        String[] stopWords = StopAnalyzer.ENGLISH_STOP_WORDS;
-       boolean found = false;
-        
-        StringBuilder result = new StringBuilder(source.length());
-        for (String s : source.split("\\s+")) {
-            for (String stopWord : stopWords) {
-                if (s.equals(stopWord)) {
-                    found = true;
-                    break;
-                }
-            }
-            if (!found){                
-                result.append(s);
-                result.append(" ");
-            }else{
-                found = false;
-            }
-        }
-        String finalResult = result.toString().replaceAll("\\p{P}", "");
-        return finalResult;
-    }
-    private static ArrayList<String> removeShortWords(String source) {
-        ArrayList<String> newList = new ArrayList<String>();
-        return newList;
-//    for (int i=0; i<source.length(); i++){
-//        String s = source[i];
-//        if (s.length() > 2){
-//            newList.add(s);
-//        }
-//    }
-//    return newList;
-    }
-
-    private static void createGraph(String source) {
-        String[] words = source.split(" ");
-        Graph<String, Integer> g = new DirectedSparseGraph();
-        for (int i = 0; i < words.length-1; i++) {
-            g.addVertex(words[i]);
-            g.addVertex(words[i+1]);
-            g.addEdge(i, words[i], words[i+1], EdgeType.DIRECTED);
-        }
-        
-    }
     
 }
