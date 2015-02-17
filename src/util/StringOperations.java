@@ -27,7 +27,7 @@ public class StringOperations {
             description.toLowerCase();
             
             String[] words = description.split("\\s+");
-            String[] result = removeShortWords(words);
+            LinkedList<String> result = removeShortWords(words);
             
            LinkedList<String> relevantWords = removeStopWords(result);
             
@@ -46,11 +46,11 @@ public class StringOperations {
     return newList;
 }
 
-    private LinkedList<String> removeStopWords(String[] words) {
+    private LinkedList<String> removeStopWords(LinkedList<String> words) {
         String[] stopWords = StopAnalyzer.ENGLISH_STOP_WORDS;
        boolean found = false;
         
-        StringBuilder result = new StringBuilder(words.length);
+        StringBuilder result = new StringBuilder(words.size());
         for (String s : words) {
             for (String stopWord : stopWords) {
                 if (s.equals(stopWord)) {
@@ -67,16 +67,16 @@ public class StringOperations {
         }
         String[] arrayResult = result.toString().replaceAll("\\p{P}", "").split(" ");
         LinkedList<String> finalResult = new LinkedList<>();
-        for (String word : finalResult) {
+        for (String word : arrayResult) {
             finalResult.add(word);
         }
         return finalResult;
     }
-    private static String[] removeShortWords(String[] source) {
-        String[] result = new String[source.length];
+    private LinkedList<String> removeShortWords(String[] source) {
+        LinkedList<String> result = new LinkedList<String>();
         for (int i=0; i<source.length; i++){
             if (source[i].length() > 2){
-            result[result.length] = source[i];
+            result.add(source[i]);
         }
     }
     return result;

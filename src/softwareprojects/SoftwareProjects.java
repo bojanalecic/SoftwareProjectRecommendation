@@ -35,8 +35,12 @@ public class SoftwareProjects {
      */
     public static void main(String[] args) {
         try {
-            // TODO code application logic here
-            LinkedList<Project> projectsWithDesc = getProjectsWithDescription();
+            String exercise = "bojana uci radi zadatak uci inteligentne sisteme da polozi ispit vc bojana uci zadatak";
+            
+            LinkedList<Project> projectsWithDesc = new LinkedList<>();
+            Project p = new Project();
+            p.setDescription(exercise);
+            projectsWithDesc.add(p);
             
             StringOperations so = new StringOperations(projectsWithDesc);
             so.prepareTextForGraph();
@@ -45,11 +49,7 @@ public class SoftwareProjects {
             go.createGraphForEachProject();
             
             
-        } catch (URISyntaxException ex) {
-            Logger.getLogger(SoftwareProjects.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParseException ex) {
-            Logger.getLogger(SoftwareProjects.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (java.text.ParseException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(SoftwareProjects.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -62,8 +62,5 @@ public class SoftwareProjects {
         return projectsWithDesc;
     }
 
-   
-
-    
     
 }
