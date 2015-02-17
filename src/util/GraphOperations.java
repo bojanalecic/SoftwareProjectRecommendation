@@ -11,8 +11,14 @@ import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.event.GraphEvent;
 import edu.uci.ics.jung.graph.event.GraphEvent.Edge;
 import edu.uci.ics.jung.graph.util.EdgeType;
+import edu.uci.ics.jung.graph.event.GraphEvent.Vertex;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.StringTokenizer;
+import static javafx.scene.input.KeyCode.V;
 
 /**
  *
@@ -30,6 +36,8 @@ public class GraphOperations {
         for (Project project : projects) {
             Graph g =createGraph(project.getRelevantWords());
             project.setGraph(g);
+            
+            extractKeywordsDegreeCentrality(project);
         }
     }
     
@@ -72,6 +80,28 @@ public class GraphOperations {
             }          
         }
         return g;
+        
+    }
+
+    private void  extractKeywordsDegreeCentrality(Project project) {
+        Graph g = project.getGraph();
+        HashMap<String, Double> degrees = new HashMap<String, Double>();
+        
+        Collection<String> vertices = g.getVertices();
+        
+        for (String vertice : vertices) {
+            int connectedNodes = g.getNeighborCount(vertice);
+            int numberOfNodes = g.getVertexCount();
+            double degreeCentrality = connectedNodes/numberOfNodes;
+            degrees.put(vertice, degreeCentrality);
+        }
+        String[] keywords = new String[5];
+        String currentMax = degrees.keySet().toArray()[0].toString();
+        for (Map.Entry<String, Double> entry : degrees.entrySet()) {
+             String key = entry.getKey();
+             Object value = entry.getValue();
+   
+        }
         
     }
     
