@@ -35,13 +35,9 @@ public class SoftwareProjects {
      */
     public static void main(String[] args) {
         try {
-            String exercise = "bojana uci radi zadatak uci inteligentne sisteme da polozi ispit vc bojana uci zadatak";
             
-            LinkedList<Project> projectsWithDesc = new LinkedList<>();
-            Project p = new Project();
-            p.setDescription(exercise);
-            projectsWithDesc.add(p);
-            
+            LinkedList<Project> projectsWithDesc = getProjectsWithDescription();
+           
             StringOperations so = new StringOperations(projectsWithDesc);
             so.prepareTextForGraph();
             
