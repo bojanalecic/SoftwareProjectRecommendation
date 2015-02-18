@@ -6,8 +6,15 @@
 package util;
 
 import domain.Project;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import opennlp.tools.postag.POSModel;
+import opennlp.tools.postag.POSTaggerME;
 import org.apache.lucene.analysis.StopAnalyzer;
 
 /**
@@ -24,12 +31,15 @@ public class StringOperations {
      public void prepareTextForGraph() {
         for (Project project : projects) {
             String description = project.getDescription();
-            description.toLowerCase();
+            description = description.toLowerCase();
             
-            String[] words = description.split("\\s+");
-            LinkedList<String> result = removeShortWords(words);
+            LinkedList<String> resultAfterTagging = tagWords(description);
             
-           LinkedList<String> relevantWords = removeStopWords(result);
+//            String[] words = description.split("\\s+");
+//            LinkedList<String> result = removeShortWords(words);
+            
+            
+           LinkedList<String> relevantWords = removeStopWords(resultAfterTagging);
             
             project.setRelevantWords(relevantWords);
         }
@@ -80,5 +90,38 @@ public class StringOperations {
         }
     }
     return result;
+    }
+
+    private LinkedList<String> tagWords(String source) {
+        LinkedList<String> result = new LinkedList<String>();
+        InputStream modelIn =  null;
+            
+        try {
+            modelIn = new FileInputStream("en-pos-maxent.bin");
+            POSModel model = new POSModel(modelIn);
+            POSTaggerME tagger = new POSTaggerME(model);
+            
+            String[] words = source.split("\\s+");
+            
+            String tags[] = tagger.tag(words);
+            
+            for (int i = 0; i < tags.length; i++) {
+                if (tags[i].equals("JJ") || tags[i].equals("NN") || tags[i].equals("NNS") || tags[i].equals("NNP") || tags[i].equals("NNPS") ){
+                    result.add(words[i]);
+                }
+            }
+            
+        } catch (IOException ex) {
+            Logger.getLogger(StringOperations.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            if (modelIn != null) {
+                 try {
+                     modelIn.close();
+                }
+                catch (IOException e) {
+                }
+            }
+        }
+        return result;
     }
 }
