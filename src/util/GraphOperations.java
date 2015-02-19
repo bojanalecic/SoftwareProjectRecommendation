@@ -11,9 +11,13 @@ import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.event.GraphEvent;
 import edu.uci.ics.jung.graph.event.GraphEvent.Edge;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 /**
@@ -81,7 +85,7 @@ public class GraphOperations {
 
     private void  extractKeywordsDegreeCentrality(Project project) {
         Graph g = project.getGraph();
-        HashMap<String, Double> degrees = new HashMap<String, Double>();
+        LinkedHashMap<String, Double> degrees = new LinkedHashMap<String, Double>();
         
         Collection<String> vertices = g.getVertices();
         
@@ -97,13 +101,21 @@ public class GraphOperations {
         }
         String[] keywords = new String[5];
         
+        ValueComparator bvc =  new ValueComparator(degrees);
+        TreeMap<String,Double> sorted_map = new TreeMap<String,Double>(bvc);
         
-        TreeMap<String, Integer> sortedMap = new TreeMap<String, Integer>();
-for (Map.Entry entry : degrees.entrySet()) {
-    sortedMap.put((String) entry.getValue(), (Integer)entry.getKey());
-}
-        
-        
+        sorted_map.putAll(degrees);
+        int counter = 0;
+        for (Map.Entry<String, Double> entrySet : sorted_map.entrySet()) {
+            String key = entrySet.getKey();
+            Double value = entrySet.getValue();
+            keywords[counter] = key;
+            counter++;
+            if (counter==5)break;
+        }
     }
     
 }
+
+
+
