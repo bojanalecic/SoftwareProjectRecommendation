@@ -46,11 +46,13 @@ public class Project extends Thing {
     private Person maintainer;
     
     private LinkedList<String> keywords;
+    private LinkedList<String> keywordsWeighted;
     private LinkedList<String> relevantWords;
     private Graph graph;
 
     public Project() {
         keywords = new LinkedList<>();
+        keywordsWeighted = new LinkedList<>();
         relevantWords = new LinkedList<>();
     }
 
@@ -68,6 +70,7 @@ public class Project extends Thing {
         this.release = releaseList;
         keywords = new LinkedList<>();
         relevantWords = new LinkedList<>();
+        keywordsWeighted = new LinkedList<>();
     }
 
     /**
@@ -247,6 +250,16 @@ public class Project extends Thing {
     public void setGraph(Graph graph) {
         this.graph = graph;
     }
+
+    public LinkedList<String> getKeywordsWeighted() {
+        return keywordsWeighted;
+    }
+
+    public void setKeywordsWeighted(LinkedList<String> keywordsWeighted) {
+        this.keywordsWeighted = keywordsWeighted;
+    }
+    
+    
     
     
 }
