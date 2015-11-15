@@ -69,7 +69,7 @@ public class TfIdfCalculator {
         return 0;
     }
 
-    private static double calculateOccurrences(String keyword, LinkedList<Project> projects) {
+    private static int calculateOccurrences(String keyword, LinkedList<Project> projects) {
         // number of occurrences  of selected keyword is calculated for all projects
         int frequency = 0;
         for (Project p : projects) {
@@ -79,27 +79,31 @@ public class TfIdfCalculator {
         return frequency;
     }
 
-    private double calculateIDF(String word, int numberOfProjects, int occurrences) {
+    private static double calculateIDF(String word, int numberOfProjects, int occurrences) {
         LinkedList<Integer> idfs = new LinkedList<>();
         double idf = 0.0;
         idf = 1 + Math.log(numberOfProjects / occurrences);
         return idf;
     }
 
-    public double getTfIDF(Project project, LinkedList<Project> projects) {
-//        HashMap<String, Double> normFrequencies;
-//        for (String keywords: project)
-//        for (Project p : projects) {
-//            
-//            
-//            HashMap<String, Integer> termFreqencies = termFrequency(p.getRelevantWords());
-//            HashMap<String, Double> normFrequencies = normalizeFrequency(termFreqencies, p.getRelevantWords().size());
-//            
-//            int occurrences  = calculateOccurrences(project.get, projects)
-//
-//        }
+    public static HashMap<String, Double> getTfIDF(Project project, LinkedList<Project> projects) {
+        HashMap<String, Double> normFrequencies;
+        HashMap<String, Double> tfIdf = new HashMap<>();
+        for (String keyword: project.getKeywords()){
+            for (Project p : projects) {            
+            
+            HashMap<String, Integer> termFreqencies = termFrequency(p.getRelevantWords());
+            normFrequencies = normalizeFrequency(termFreqencies, p.getRelevantWords().size());            
+            int occurrences  = calculateOccurrences(keyword, projects);
+            
+            double idf = calculateIDF(keyword, projects.size(), occurrences);
+            
+            tfIdf.put(keyword, idf);
+
+        }
+        }        
         
-        return 0;
+        return tfIdf;
 
     }
 
