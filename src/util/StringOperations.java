@@ -27,8 +27,16 @@ public class StringOperations {
     public StringOperations(LinkedList<Project> projects) {
         this.projects = projects;
     }
+
+    public LinkedList<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(LinkedList<Project> projects) {
+        this.projects = projects;
+    }
     
-     public void prepareTextForGraph() {
+       public void prepareTextForGraph() {
         for (Project project : projects) {
             String description = project.getDescription();
             description = description.toLowerCase();

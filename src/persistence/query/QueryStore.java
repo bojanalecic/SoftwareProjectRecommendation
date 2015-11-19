@@ -363,7 +363,7 @@ public class QueryStore {
         queryString = queryString + " }.";
        
         
-            queryString = queryString + " } ORDER BY ?name LIMIT 1";
+            queryString = queryString + " } ORDER BY ?name LIMIT 10";
        
         
              

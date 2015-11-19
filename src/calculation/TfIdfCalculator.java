@@ -45,6 +45,8 @@ public class TfIdfCalculator {
                     }
                 }
             }
+            frequences.put(w, frequency);
+            frequency = 0;
         }
         return frequences;
     }
@@ -53,7 +55,7 @@ public class TfIdfCalculator {
         HashMap<String, Double> normFreqences = new HashMap<>();
         double normFreq;
         for (String w : termFrequences.keySet()) {
-            normFreq = termFrequences.get(w) / size;
+            normFreq = ((double) termFrequences.get(w) / (double)size);
             normFreqences.put(w, normFreq);
         }
 
@@ -95,6 +97,7 @@ public class TfIdfCalculator {
             HashMap<String, Integer> termFreqencies = termFrequency(p.getRelevantWords());
             normFrequencies = normalizeFrequency(termFreqencies, p.getRelevantWords().size());            
             int occurrences  = calculateOccurrences(keyword, projects);
+            if (occurrences == 0) occurrences=1;
             
             double idf = calculateIDF(keyword, projects.size(), occurrences);
             

@@ -5,6 +5,7 @@
  */
 package softwareprojects;
 
+import calculation.TfIdfCalculator;
 import com.hp.hpl.jena.n3.turtle.parser.ParseException;
 import domain.Project;
 import domain.SearchString;
@@ -41,8 +42,13 @@ public class SoftwareProjects {
             StringOperations so = new StringOperations(projectsWithDesc);
             so.prepareTextForGraph();
             
-            GraphOperations go = new GraphOperations(projectsWithDesc);
+                 
+            GraphOperations go = new GraphOperations(so.getProjects());
             go.createGraphForEachProject();
+            
+            projectsWithDesc = go.getProjects();
+            
+            TfIdfCalculator.getTfIDF(projectsWithDesc.get(0), projectsWithDesc);
             
             
         } catch (Exception ex) {

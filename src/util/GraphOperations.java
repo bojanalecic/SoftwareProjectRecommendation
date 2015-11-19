@@ -31,6 +31,14 @@ public class GraphOperations {
     public GraphOperations(LinkedList<Project> projects) {
         this.projects = projects;
     }
+
+    public LinkedList<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(LinkedList<Project> projects) {
+        this.projects = projects;
+    }
     
     public void createGraphForEachProject(){
         for (Project project : projects) {
@@ -99,7 +107,7 @@ public class GraphOperations {
             double degreeCentrality = connectedNodes/numberOfNodes;
             degrees.put(vertice, degreeCentrality);
         }
-        String[] keywords = new String[5];
+        LinkedList<String> keywords = new LinkedList<>();
         
         ValueComparator bvc =  new ValueComparator(degrees);
         TreeMap<String,Double> sorted_map = new TreeMap<String,Double>(bvc);
@@ -109,12 +117,22 @@ public class GraphOperations {
         for (Map.Entry<String, Double> entrySet : sorted_map.entrySet()) {
             String key = entrySet.getKey();
             Double value = entrySet.getValue();
-            keywords[counter] = key;
+            keywords.add(key);
             counter++;
             if (counter==5)break;
         }
         
+        keywords.add(project.getName());
         
+        keywords.add(project.getProgramminglanguage().iterator().next());
+        
+        keywords.add(project.getOs().iterator().next());
+        
+        keywords.add(project.getCategory().iterator().next());
+        keywords.add(project.getCategory().iterator().next());
+        keywords.add(project.getCategory().iterator().next());
+        
+        project.setKeywords(keywords);
     }
     
 }
