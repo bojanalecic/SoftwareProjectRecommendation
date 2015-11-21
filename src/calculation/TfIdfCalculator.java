@@ -89,18 +89,23 @@ public class TfIdfCalculator {
     }
 
     public static LinkedList<Double> getTfIDF(Project slaveProject, Project masterProject, LinkedList<Project> projects) {
+        HashMap<String, Integer> termFreqencies = termFrequency(masterProject.getRelevantWords());
         HashMap<String, Double> normFrequencies;
         LinkedList<Double> tfIdf = new LinkedList<>();
-        for (String keyword: slaveProject.getKeywords()){
+         normFrequencies = normalizeFrequency(termFreqencies, masterProject.getRelevantWords().size());            
+         for (String keyword: slaveProject.getKeywords()){
             
-            HashMap<String, Integer> termFreqencies = termFrequency(masterProject.getRelevantWords());
-            normFrequencies = normalizeFrequency(termFreqencies, masterProject.getRelevantWords().size());            
             int occurrences  = calculateOccurrences(keyword, projects);
             if (occurrences == 0) occurrences=1;
             
             double idf = calculateIDF(keyword, projects.size(), occurrences);
-            
-            tfIdf.add(idf);
+            double fr = 0;
+            if (normFrequencies.containsKey(keyword)){
+                fr = normFrequencies.get(keyword);
+            }else{
+                fr = 0;
+            }
+            tfIdf.add(idf*fr);
         }        
         
         return tfIdf;

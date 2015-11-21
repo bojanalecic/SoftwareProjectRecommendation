@@ -29,7 +29,7 @@ public class CosineSimilarityCalculator {
 		query = Math.sqrt(query);// sqrt(a^2)
 		document = Math.sqrt(document);// sqrt(b^2)
 
-		if (query != 0.0 | document != 0.0) {
+		if (query != 0.0 & document != 0.0) {
 			cosineSimilarity = dotProduct / (query * document);
 		} else {
 			return 0.0;

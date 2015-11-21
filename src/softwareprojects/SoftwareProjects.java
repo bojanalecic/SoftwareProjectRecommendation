@@ -17,6 +17,7 @@ import edu.uci.ics.jung.graph.util.EdgeType;
 import edu.uci.ics.jung.visualization.renderers.Renderer.Edge;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -51,16 +52,27 @@ public class SoftwareProjects {
             
            LinkedList<Double> query = TfIdfCalculator.getTfIDF(projectsWithDesc.get(0), projectsWithDesc.get(0), projectsWithDesc);
            LinkedList<Double> masterDocument;
+           HashMap<String, Double> similarities = new HashMap<>();
            
            for (Project p: projectsWithDesc) {
                masterDocument = TfIdfCalculator.getTfIDF(projectsWithDesc.get(0), p, projectsWithDesc);
-               double similarities = CosineSimilarityCalculator.cosineSimilarity(query, masterDocument);
+               double similarity = CosineSimilarityCalculator.cosineSimilarity(query, masterDocument);
+               similarities.put(p.getName(),similarity);
+               similarities.remove(projectsWithDesc.get(0).getName());
+           }
+           double max = 0;
+           String winner;
+           for (String project: similarities.keySet()){
+               if (max< similarities.get(project)){
+               max = similarities.get(project);
+               winner = project;
+            }
            }
             
         } catch (Exception ex) {
             Logger.getLogger(SoftwareProjects.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
+   }
 
     private static LinkedList<Project> getProjectsWithDescription() throws URISyntaxException, ParseException, java.text.ParseException {
         LinkedList<Project> projectsWithDesc = new LinkedList<Project>();
