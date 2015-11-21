@@ -5,6 +5,7 @@
  */
 package softwareprojects;
 
+import calculation.CosineSimilarityCalculator;
 import calculation.TfIdfCalculator;
 import com.hp.hpl.jena.n3.turtle.parser.ParseException;
 import domain.Project;
@@ -48,8 +49,13 @@ public class SoftwareProjects {
             
             projectsWithDesc = go.getProjects();
             
-            TfIdfCalculator.getTfIDF(projectsWithDesc.get(0), projectsWithDesc);
-            
+           LinkedList<Double> query = TfIdfCalculator.getTfIDF(projectsWithDesc.get(0), projectsWithDesc.get(0), projectsWithDesc);
+           LinkedList<Double> masterDocument;
+           
+           for (Project p: projectsWithDesc) {
+               masterDocument = TfIdfCalculator.getTfIDF(projectsWithDesc.get(0), p, projectsWithDesc);
+               double similarities = CosineSimilarityCalculator.cosineSimilarity(query, masterDocument);
+           }
             
         } catch (Exception ex) {
             Logger.getLogger(SoftwareProjects.class.getName()).log(Level.SEVERE, null, ex);

@@ -16,21 +16,21 @@ public class CosineSimilarityCalculator {
     public static double cosineSimilarity(LinkedList<Double> projectMaster, LinkedList<Double> projectSlave) {
 		// algorithm for calculation of cosine similarity  
 		double dotProduct = 0.0;
-		double magnitude1 = 0.0;
-		double magnitude2 = 0.0;
+		double query = 0.0;
+		double document = 0.0;
 		double cosineSimilarity = 0.0;
 		// docVector1 and docVector2 must be of same length
 		for (int i = 0; i < projectMaster.size(); i++) {
 			dotProduct += projectMaster.get(i) * projectSlave.get(i); // a.b
-			magnitude1 += Math.pow(projectMaster.get(i), 2); // (a^2)
-			magnitude2 += Math.pow(projectSlave.get(i), 2); // (b^2)
+			query += Math.pow(projectMaster.get(i), 2); // (a^2)
+			document += Math.pow(projectSlave.get(i), 2); // (b^2)
 		}
 
-		magnitude1 = Math.sqrt(magnitude1);// sqrt(a^2)
-		magnitude2 = Math.sqrt(magnitude2);// sqrt(b^2)
+		query = Math.sqrt(query);// sqrt(a^2)
+		document = Math.sqrt(document);// sqrt(b^2)
 
-		if (magnitude1 != 0.0 | magnitude2 != 0.0) {
-			cosineSimilarity = dotProduct / (magnitude1 * magnitude2);
+		if (query != 0.0 | document != 0.0) {
+			cosineSimilarity = dotProduct / (query * document);
 		} else {
 			return 0.0;
 		}
