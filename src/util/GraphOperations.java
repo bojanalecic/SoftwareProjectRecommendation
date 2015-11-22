@@ -45,6 +45,7 @@ public class GraphOperations {
             Graph g =createGraph(project.getRelevantWords());
             project.setGraph(g);
             
+//          Once graph is created, we extract keywords based on Degree centrality method  
             extractKeywordsDegreeCentrality(project);
         }
     }
@@ -122,16 +123,27 @@ public class GraphOperations {
             if (counter==5)break;
         }
         
+//      Add name of project as keyword  
         keywords.add(project.getName());
         
-        keywords.add(project.getProgramminglanguage().iterator().next());
+//      Add programming languages as kreywords  
+        for (String lang: project.getProgramminglanguage()){
+            keywords.add(lang);
+        }     
+       
+//      Add operating systems as keyword  
+        for (String os: project.getOs()){
+            keywords.add(os);
+        }
         
-        keywords.add(project.getOs().iterator().next());
-        
-        keywords.add(project.getCategory().iterator().next());
-        keywords.add(project.getCategory().iterator().next());
-        keywords.add(project.getCategory().iterator().next());
-        
+//      Add first two categories as keywords  
+        int onlyTwoCat = 0;
+        for (String cat: project.getOs()){
+            keywords.add(cat);
+            onlyTwoCat++;
+            if (onlyTwoCat == 2) break;
+        }
+       
         project.setKeywords(keywords);
     }
     

@@ -33,6 +33,7 @@ public class TfIdfCalculator {
         return allRelevantWords;
     }
 
+//  Calculation of term frequency for keywords of each project  
     private static HashMap<String, Integer> termFrequency(LinkedList<String> relevantWords) {
         HashMap<String, Integer> frequences = new HashMap<String, Integer>();
         int frequency = 0;
@@ -51,6 +52,7 @@ public class TfIdfCalculator {
         return frequences;
     }
 
+//    Normalization of previosly calculated term frequencies
     private static HashMap<String, Double> normalizeFrequency(HashMap<String, Integer> termFrequences, int size) {
         HashMap<String, Double> normFreqences = new HashMap<>();
         double normFreq;
@@ -62,6 +64,7 @@ public class TfIdfCalculator {
         return normFreqences;
     }
 
+//        returns 1 if keywords of compare project contain keyword of master project
     private static int contains(LinkedList<String> words, String word) {
         for (String w : words) {
             if (w.equalsIgnoreCase(word)) {
@@ -71,11 +74,11 @@ public class TfIdfCalculator {
         return 0;
     }
 
+// number of occurrences  of selected keyword is calculated for all projects
     private static int calculateOccurrences(String keyword, LinkedList<Project> projects) {
-        // number of occurrences  of selected keyword is calculated for all projects
         int frequency = 0;
         for (Project p : projects) {
-            frequency += contains(p.getRelevantWords(), keyword);
+            frequency += contains(p.getKeywords(), keyword);
         }
 
         return frequency;
@@ -84,21 +87,32 @@ public class TfIdfCalculator {
     private static double calculateIDF(String word, int numberOfProjects, int occurrences) {
         LinkedList<Integer> idfs = new LinkedList<>();
         double idf = 0.0;
+        
+//        standard formula to calculate idf
         idf = 1 + Math.log(numberOfProjects / occurrences);
         return idf;
     }
 
     public static LinkedList<Double> getTfIDF(Project slaveProject, Project masterProject, LinkedList<Project> projects) {
-        HashMap<String, Integer> termFreqencies = termFrequency(masterProject.getRelevantWords());
+//        HashMap<String, Integer> termFreqencies = termFrequency(masterProject.getRelevantWords());
+        
+//        Calculate term frequency for keywords 
+        HashMap<String, Integer> termFreqencies = termFrequency(masterProject.getKeywords());
         HashMap<String, Double> normFrequencies;
         LinkedList<Double> tfIdf = new LinkedList<>();
-         normFrequencies = normalizeFrequency(termFreqencies, masterProject.getRelevantWords().size());            
+//        Normalize term frequencies
+         normFrequencies = normalizeFrequency(termFreqencies, masterProject.getKeywords().size());            
          for (String keyword: slaveProject.getKeywords()){
             
+//          in order to calculate tf/idf we need number of occurences keyword in all projects   
             int occurrences  = calculateOccurrences(keyword, projects);
+//          every word occur at least once; if it is zero, some error occured  
             if (occurrences == 0) occurrences=1;
             
+//          idf is calculated for each keyword  
             double idf = calculateIDF(keyword, projects.size(), occurrences);
+            
+//          finally we calculate tf/idf by multiplying idf with tf  
             double fr = 0;
             if (normFrequencies.containsKey(keyword)){
                 fr = normFrequencies.get(keyword);

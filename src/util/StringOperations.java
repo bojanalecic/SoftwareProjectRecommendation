@@ -7,6 +7,7 @@ package util;
 
 import domain.Project;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -23,9 +24,20 @@ import org.apache.lucene.analysis.StopAnalyzer;
  */
 public class StringOperations {
     private LinkedList<Project> projects;
+    InputStream modelIn =  null;
+    POSTaggerME tagger = null;
+    POSModel model = null;
 
     public StringOperations(LinkedList<Project> projects) {
-        this.projects = projects;
+        try {
+            this.projects = projects;
+            modelIn = new FileInputStream("en-pos-maxent.bin");
+            model = new POSModel(modelIn);
+            tagger = new POSTaggerME(model);
+        } catch (Exception ex) {
+            Logger.getLogger(StringOperations.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            
     }
 
     public LinkedList<Project> getProjects() {
@@ -102,33 +114,26 @@ public class StringOperations {
 
     private LinkedList<String> tagWords(String source) {
         LinkedList<String> result = new LinkedList<String>();
-        InputStream modelIn =  null;
-            
-        try {
-            modelIn = new FileInputStream("en-pos-maxent.bin");
-            POSModel model = new POSModel(modelIn);
-            POSTaggerME tagger = new POSTaggerME(model);
-            
+        try {                      
             String[] words = source.split("\\s+");
             
-            String tags[] = tagger.tag(words);
-            
+            String tags[] = tagger.tag(words);            
             for (int i = 0; i < tags.length; i++) {
                 if (tags[i].equals("JJ") || tags[i].equals("NN") || tags[i].equals("NNS") || tags[i].equals("NNP") || tags[i].equals("NNPS") ){
                     result.add(words[i]);
                 }
             }
             
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(StringOperations.class.getName()).log(Level.SEVERE, null, ex);
         }finally{
-            if (modelIn != null) {
-                 try {
-                     modelIn.close();
-                }
-                catch (IOException e) {
-                }
-            }
+//            if (modelIn != null) {
+//                 try {
+//                     modelIn.close();
+//                }
+//                catch (IOException e) {
+//                }
+//            }
         }
         return result;
     }
