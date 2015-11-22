@@ -137,12 +137,12 @@ public class GraphOperations {
         }
         
 //      Add first two categories as keywords  
-        int onlyTwoCat = 0;
-        for (String cat: project.getOs()){
-            keywords.add(cat);
-            onlyTwoCat++;
-            if (onlyTwoCat == 2) break;
-        }
+//        int onlyTwoCat = 0;
+//        for (String cat: project.getOs()){
+//            keywords.add(cat);
+//            onlyTwoCat++;
+//            if (onlyTwoCat == 2) break;
+//        }
        
         project.setKeywords(keywords);
     }

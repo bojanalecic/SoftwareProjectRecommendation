@@ -44,6 +44,8 @@ public class SoftwareProjects {
                 userProject = getUserPreferences(input);
                 if (userProject == "") {
                     throw new Exception("Invalid user!");
+                }else{
+                    System.out.println("Your last downloaded project is: "+userProject);
                 }
             } catch (IOException e) {
                 // TODO Auto-generated catch block
@@ -63,12 +65,17 @@ public class SoftwareProjects {
 
             projectsWithDesc = go.getProjects();
 
-            Project projectMaster = null;
+            
+            
+
+            Project projectMaster = new Project();
             for (Project p : projectsWithDesc) {
                 if (p.getName().equals(userProject)) {
                     projectMaster = p;
                 }
             }
+            
+            
 
 //         By using previosly extracted keywords, calculate TF/IDF for project that we want to compare to others    
             LinkedList<Double> query = TfIdfCalculator.getTfIDF(projectMaster, projectMaster, projectsWithDesc);
