@@ -5,11 +5,16 @@
  */
 package services;
 
+import com.hp.hpl.jena.n3.turtle.parser.ParseException;
 import domain.Project;
+import domain.SearchString;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import persistence.query.QueryStore;
 import softwareprojects.SoftwareProjects;
 
 /**
@@ -18,41 +23,13 @@ import softwareprojects.SoftwareProjects;
  */
 public class SoftwareProjectServices {
     
-//public String getSimilarities(Collection<Project> projects, Project masterProject) {
-	    
-// this service updates movie repository
-		// reads all movies from the repository
-		// saves new movies
-		// finally it recalculates all similarities and writes them into csv
-		// file
-//		int size = 0;
-//		
-//
-//		HashMap<String, List<Double>> similarities = new HashMap<>();
-//		List<List<Double>> values = new ArrayList<>();
-//		List<Project> projectsList = new ArrayList<>();
-//
-//		projectsList.addAll(projects);
-//		for (Project p : projects) {
-//			values.add(p.getKeywords());
-//		}
-//
-//		List<Double> coefficients = new ArrayList<Double>();
-//		int index = 0;
-//		for (List<Double> coeffs1 : values) {
-//			for (List<Double> coeffs2 : values) {
-//				coefficients.add(CosineSimilarityCalculator.cosineSimilarity(coeffs1, coeffs2));
-//				similarities.put(moviesList.get(index).getName(), coefficients);
-//			}
-//			index++;
-//			coefficients = new ArrayList<>();
-//		}
-//		SimilarityWriter.writeInFile(moviesList, similarities);
-//		DataModelManager.getInstance().closeDataModel();
-//		// as a response this service retrieves message with the number of
-//		// movies that were added in the repository
-//		return MovieJsonParser.serializeMessage(movies.size() - size).toString();
+    public static LinkedList<Project> getProjectsWithDescription() throws URISyntaxException, ParseException, java.text.ParseException {
+        LinkedList<Project> projectsWithDesc = new LinkedList<Project>();
+        QueryStore queryStore = new QueryStore();
+        SearchString ss = new SearchString();
+        projectsWithDesc = queryStore.returnProjectsWithDescriptions();
+        return projectsWithDesc;
+    }
 
-//}
     
 }

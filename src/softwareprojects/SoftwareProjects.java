@@ -20,8 +20,10 @@ import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import persistence.query.QueryStore;
+import services.SoftwareProjectServices;
 import util.GraphOperations;
 import util.StringOperations;
+import services.UserServices;
 
 /**
  *
@@ -34,67 +36,66 @@ public class SoftwareProjects {
      */
     public static void main(String[] args) {
         try {
-//           Current version is developed as console application, user is supposed to enter username in order to get preferences from file
+//          Current version is developed as console application, user is supposed to enter username in order to get preferences from file
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             System.out.println("Hello! Please enter your username!");
             String input;
             String userProject = "";
             try {
                 input = br.readLine();
-                userProject = getUserPreferences(input);
+                UserServices.username = input;
+                userProject = UserServices.findFavoriteProject();
                 if (userProject == "") {
                     throw new Exception("Invalid user!");
-                }else{
-                    System.out.println("Your last downloaded project is: "+userProject);
+                } else {
+                    System.out.println("Your last downloaded project is: " + userProject);
                 }
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
                 return;
             }
 
-            LinkedList<Project> projectsWithDesc = getProjectsWithDescription();
+            LinkedList<Project> projectsWithDesc = SoftwareProjectServices.getProjectsWithDescription();
 
-//          Remove all stopwords and irrelevant words  
+//          Remove all short words, words that are not neither nouns or adjectives, stopwords and irrelevant words  
             StringOperations so = new StringOperations(projectsWithDesc);
             so.prepareTextForGraph();
 
 //          Based on relevant words, create graph using jung library and extract keywords based on degree centrality method        
             GraphOperations go = new GraphOperations(so.getProjects());
-            go.createGraphForEachProject();
+            projectsWithDesc = go.createGraphForEachProject();
 
-            projectsWithDesc = go.getProjects();
-
-            
-            
-
+//          User preffered project is set to be master project
             Project projectMaster = new Project();
             for (Project p : projectsWithDesc) {
                 if (p.getName().equals(userProject)) {
                     projectMaster = p;
+                    break;
                 }
             }
-            
-            
 
-//         By using previosly extracted keywords, calculate TF/IDF for project that we want to compare to others    
-            LinkedList<Double> query = TfIdfCalculator.getTfIDF(projectMaster, projectMaster, projectsWithDesc);
-            LinkedList<Double> comparison;
+            TfIdfCalculator tfIdfCalc = new TfIdfCalculator(projectsWithDesc);
+   
+//         By using previosly extracted keywords, calculate TF/IDF for project that we want to compare to others           
+            tfIdfCalc.calculateTfIDF(projectMaster);
+            tfIdfCalc.calculateLength(projectMaster);
+            
             HashMap<String, Double> similarities = new HashMap<>();
 
             for (Project p : projectsWithDesc) {
 //             Calculate TF/IDF for every project in the list  
-                comparison = TfIdfCalculator.getTfIDF(projectMaster, p, projectsWithDesc);
+                tfIdfCalc.calculateTfIDF(p);
+                tfIdfCalc.calculateLength(p);
 
 //             Calculate cosine similarity between master project and compared project;
 //             Result is double value   
-                double similarity = CosineSimilarityCalculator.cosineSimilarity(query, comparison);
+                double similarity = CosineSimilarityCalculator.cosineSimilarity(projectMaster, p);
                 similarities.put(p.getName(), similarity);
             }
-            
+
 //             No need to store similarity with itself, it is always 1  
-                similarities.remove(projectMaster.getName());
-                
+            similarities.remove(projectMaster.getName());
+
             double max = 0;
             String winner = "";
 
@@ -110,40 +111,6 @@ public class SoftwareProjects {
 
         } catch (Exception ex) {
             Logger.getLogger(SoftwareProjects.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    private static LinkedList<Project> getProjectsWithDescription() throws URISyntaxException, ParseException, java.text.ParseException {
-        LinkedList<Project> projectsWithDesc = new LinkedList<Project>();
-        QueryStore queryStore = new QueryStore();
-        SearchString ss = new SearchString();
-        projectsWithDesc = queryStore.returnProjectsWithDescriptions();
-        return projectsWithDesc;
-    }
-
-    private static String getUserPreferences(String username) {
-
-        BufferedReader br = null;
-        // user preferences (last downloaded/seen project) are stored in file userref.csv
-        try {
-            String sCurrentLine;
-            br = new BufferedReader(new FileReader("files/userPref.csv"));
-            HashMap<String, String[]> userPref = new HashMap<>();
-            int index = 0;
-            String favProject = "";
-            while ((sCurrentLine = br.readLine()) != null) {
-                if (sCurrentLine.startsWith(username)) {
-                    String[] data = sCurrentLine.split(",");
-                    favProject = data[1];
-                }
-            }
-            br.close();
-
-            return favProject;
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
         }
     }
 

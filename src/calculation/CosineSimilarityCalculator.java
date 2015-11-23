@@ -5,6 +5,7 @@
  */
 package calculation;
 
+import domain.Project;
 import java.util.LinkedList;
 
 /**
@@ -12,29 +13,27 @@ import java.util.LinkedList;
  * @author lecicb
  */
 public class CosineSimilarityCalculator {
-    
-    public static double cosineSimilarity(LinkedList<Double> projectMaster, LinkedList<Double> projectSlave) {
-		// algorithm for calculation of cosine similarity  
-		double dotProduct = 0.0;
-		double query = 0.0;
-		double document = 0.0;
-		double cosineSimilarity = 0.0;
-		// docVector1 and docVector2 must be of same length
-		for (int i = 0; i < projectMaster.size(); i++) {
-			dotProduct += projectMaster.get(i) * projectSlave.get(i); // a.b
-			query += Math.pow(projectMaster.get(i), 2); // (a^2)
-			document += Math.pow(projectSlave.get(i), 2); // (b^2)
-		}
 
-		query = Math.sqrt(query);// sqrt(a^2)
-		document = Math.sqrt(document);// sqrt(b^2)
+    public static double cosineSimilarity(Project projectMaster, Project projectSlave) throws Exception {
 
-		if (query != 0.0 & document != 0.0) {
-			cosineSimilarity = dotProduct / (query * document);
-		} else {
-			return 0.0;
-		}
-		return cosineSimilarity;
-	}
+        LinkedList<Double> masterTfIdf = projectMaster.getTfIdf();
+        LinkedList<Double> slaveTfIdf = projectSlave.getTfIdf();
+
+        if (masterTfIdf.size() != slaveTfIdf.size()) {
+            throw new Exception("Error occured");
+        }
+        
+        double a = 0.0;
+        double b = 0.0;
+
+        // algorithm for calculation of cosine similarity  
+        for (int i = 0; i <slaveTfIdf.size(); i++) {
+            a = a + (masterTfIdf.get(i)*slaveTfIdf.get(i)); 
+        }
+        
+        b = projectMaster.getLength() * projectSlave.getLength();
+       
+      return a/b;
+    }
 
 }

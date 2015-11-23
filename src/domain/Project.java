@@ -7,6 +7,7 @@ package domain;
 import edu.uci.ics.jung.graph.Graph;
 import java.net.URI;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import thewebsemantic.Namespace;
@@ -49,6 +50,8 @@ public class Project extends Thing {
     private LinkedList<String> keywordsWeighted;
     private LinkedList<String> relevantWords;
     private Graph graph;
+    private LinkedList<Double> tfIdf;
+    private double length;
 
     public Project() {
         keywords = new LinkedList<>();
@@ -71,6 +74,7 @@ public class Project extends Thing {
         keywords = new LinkedList<>();
         relevantWords = new LinkedList<>();
         keywordsWeighted = new LinkedList<>();
+        tfIdf = new LinkedList<Double>();
     }
 
     /**
@@ -257,6 +261,22 @@ public class Project extends Thing {
 
     public void setKeywordsWeighted(LinkedList<String> keywordsWeighted) {
         this.keywordsWeighted = keywordsWeighted;
+    }
+
+    public LinkedList<Double> getTfIdf() {
+        return tfIdf;
+    }
+
+    public void setTfIdf(LinkedList<Double> tfIdf) {
+        this.tfIdf = tfIdf;
+    }
+
+    public double getLength() {
+        return length;
+    }
+
+    public void setLength(double length) {
+        this.length = length;
     }
     
     
