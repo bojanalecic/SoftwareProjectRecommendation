@@ -20,6 +20,7 @@ import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import persistence.query.QueryStore;
+import services.FileWriter;
 import services.SoftwareProjectServices;
 import util.GraphOperations;
 import util.StringOperations;
@@ -95,6 +96,12 @@ public class SoftwareProjects {
 
 //             No need to store similarity with itself, it is always 1  
             similarities.remove(projectMaster.getName());
+            LinkedList<Double> temp  =new LinkedList<>();
+            for(double d: similarities.values() ){
+                temp.add(d);
+            }
+            FileWriter fw = new FileWriter();
+            fw.writeSimilarities(projectsWithDesc, temp);
 
             double max = 0;
             String winner = "";
@@ -112,6 +119,7 @@ public class SoftwareProjects {
         } catch (Exception ex) {
             Logger.getLogger(SoftwareProjects.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }
 
 }
