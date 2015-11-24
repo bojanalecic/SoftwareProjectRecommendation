@@ -73,7 +73,7 @@ public class StringOperations {
         ArrayList<String> newList = new ArrayList<String>();
         for (int i = 0; i < source.length; i++) {
             String s = source[i];
-            if (!newList.contains(s) && s.length() > 2) {
+            if ((!newList.contains(s)) && s.length() > 2) {
                 newList.add(s);
             }
         }

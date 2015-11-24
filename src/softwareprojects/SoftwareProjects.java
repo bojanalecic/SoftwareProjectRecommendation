@@ -7,20 +7,15 @@ package softwareprojects;
 
 import calculation.CosineSimilarityCalculator;
 import calculation.TfIdfCalculator;
-import com.hp.hpl.jena.n3.turtle.parser.ParseException;
 import domain.Project;
-import domain.SearchString;
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import persistence.query.QueryStore;
-import services.FileWriter;
+import services.FileService;
 import services.SoftwareProjectServices;
 import util.GraphOperations;
 import util.StringOperations;
@@ -56,15 +51,15 @@ public class SoftwareProjects {
                 return;
             }
 
+            FileService fs = new FileService();
+            boolean emptyFile = fs.isFileEmpty();
+            HashMap<String, Double> similarities = new HashMap<>();
+
             LinkedList<Project> projectsWithDesc = SoftwareProjectServices.getProjectsWithDescription();
 
-//          Remove all short words, words that are not neither nouns or adjectives, stopwords and irrelevant words  
-            StringOperations so = new StringOperations(projectsWithDesc);
-            so.prepareTextForGraph();
-
-//          Based on relevant words, create graph using jung library and extract keywords based on degree centrality method        
-            GraphOperations go = new GraphOperations(so.getProjects());
-            projectsWithDesc = go.createGraphForEachProject();
+            if (emptyFile) {
+                fs.writeHeader(projectsWithDesc);
+            }
 
 //          User preffered project is set to be master project
             Project projectMaster = new Project();
@@ -75,40 +70,23 @@ public class SoftwareProjects {
                 }
             }
 
-            TfIdfCalculator tfIdfCalc = new TfIdfCalculator(projectsWithDesc);
-   
-//         By using previosly extracted keywords, calculate TF/IDF for project that we want to compare to others           
-            tfIdfCalc.calculateTfIDF(projectMaster);
-            tfIdfCalc.calculateLength(projectMaster);
-            
-            HashMap<String, Double> similarities = new HashMap<>();
-
-            for (Project p : projectsWithDesc) {
-//             Calculate TF/IDF for every project in the list  
-                tfIdfCalc.calculateTfIDF(p);
-                tfIdfCalc.calculateLength(p);
-
-//             Calculate cosine similarity between master project and compared project;
-//             Result is double value   
-                double similarity = CosineSimilarityCalculator.cosineSimilarity(projectMaster, p);
-                similarities.put(p.getName(), similarity);
+            if (fs.projectExistInFile(projectMaster.getName())) {
+                fs.readSimilarities(projectMaster.getName());
+            } else {
+                similarities = SoftwareProjectServices.calculateSimilarities(projectMaster, projectsWithDesc);
+                LinkedList<Double> temp = new LinkedList<>();
+                for (double d : similarities.values()) {
+                    temp.add(d);
+                }
+                fs.writeSimilarities(projectsWithDesc, temp);
             }
-
-//             No need to store similarity with itself, it is always 1  
-            similarities.remove(projectMaster.getName());
-            LinkedList<Double> temp  =new LinkedList<>();
-            for(double d: similarities.values() ){
-                temp.add(d);
-            }
-            FileWriter fw = new FileWriter();
-            fw.writeSimilarities(projectsWithDesc, temp);
 
             double max = 0;
             String winner = "";
 
 //         Find maximum value in similarities  
             for (String project : similarities.keySet()) {
-                if (max < similarities.get(project)) {
+                if (max < similarities.get(project) && similarities.get(project) != 1) {
                     max = similarities.get(project);
                     winner = project;
                 }
