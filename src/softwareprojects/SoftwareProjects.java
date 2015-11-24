@@ -34,9 +34,13 @@ public class SoftwareProjects {
         try {
 //          Current version is developed as console application, user is supposed to enter username in order to get preferences from file
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-            System.out.println("Hello! Please enter your username!");
+            LinkedList<Double> similarities = new LinkedList<Double>();
             String input;
             String userProject = "";
+            Project projectMaster = new Project();
+            LinkedList<Project> projectsWithDesc;
+
+            System.out.println("Hello! Please enter your username!");
             try {
                 input = br.readLine();
                 UserServices.username = input;
@@ -52,43 +56,36 @@ public class SoftwareProjects {
             }
 
             FileService fs = new FileService();
-            boolean emptyFile = fs.isFileEmpty();
-            HashMap<String, Double> similarities = new HashMap<>();
 
-            LinkedList<Project> projectsWithDesc = SoftwareProjectServices.getProjectsWithDescription();
-
-            if (emptyFile) {
-                fs.writeHeader(projectsWithDesc);
-            }
-
-//          User preffered project is set to be master project
-            Project projectMaster = new Project();
-            for (Project p : projectsWithDesc) {
-                if (p.getName().equals(userProject)) {
-                    projectMaster = p;
-                    break;
-                }
-            }
-
-            if (fs.projectExistInFile(projectMaster.getName())) {
-                fs.readSimilarities(projectMaster.getName());
+            if (fs.projectExistInFile(userProject)) {
+                similarities = fs.readSimilarities(userProject);
             } else {
-                similarities = SoftwareProjectServices.calculateSimilarities(projectMaster, projectsWithDesc);
-                LinkedList<Double> temp = new LinkedList<>();
-                for (double d : similarities.values()) {
-                    temp.add(d);
+                boolean emptyFile = fs.isFileEmpty();
+                projectsWithDesc = SoftwareProjectServices.getProjectsWithDescription();
+                if (emptyFile) {
+                    fs.writeHeader(projectsWithDesc);
                 }
-                fs.writeSimilarities(projectsWithDesc, temp);
-            }
 
+                //          User preffered project is set to be master project
+                for (Project p : projectsWithDesc) {
+                    if (p.getName().equals(userProject)) {
+                        projectMaster = p;
+                        break;
+                    }
+                }
+                similarities = SoftwareProjectServices.calculateSimilarities(projectMaster, projectsWithDesc);
+                fs.writeSimilarities(projectMaster.getName(), similarities);
+            }
             double max = 0;
             String winner = "";
 
+            LinkedList<String> titles = fs.readTitles();
+
 //         Find maximum value in similarities  
-            for (String project : similarities.keySet()) {
-                if (max < similarities.get(project) && similarities.get(project) != 1) {
-                    max = similarities.get(project);
-                    winner = project;
+            for (int i = 0; i < similarities.size(); i++) {
+                if (max < similarities.get(i) && similarities.get(i) != 1) {
+                    max = similarities.get(i);
+                    winner = titles.get(i);
                 }
 
             }

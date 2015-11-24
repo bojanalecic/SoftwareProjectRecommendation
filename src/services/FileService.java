@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.LinkedList;
@@ -25,34 +26,27 @@ public class FileService {
     File similarities;
     FileOutputStream outputStream;
     OutputStreamWriter outputWriter;
-    BufferedWriter writer;
+    FileWriter writer;
     BufferedReader reader;
 
-    public FileService() throws FileNotFoundException {
+    public FileService() throws FileNotFoundException, IOException {
         reader = new BufferedReader(new FileReader("files/similarities.csv"));
 //	similarities =  new File("files/similarities.csv");
-        outputStream = new FileOutputStream("files/similarities.csv");
-        outputWriter = new OutputStreamWriter(outputStream);    
-        writer = new BufferedWriter(outputWriter);
+//        outputStream = new FileOutputStream("files/similarities.csv");
+//        outputWriter = new OutputStreamWriter(outputStream);
+        writer = new FileWriter("files/similarities.csv", true);
     }
 
-   
-    public void writeSimilarities(LinkedList<Project> projects, LinkedList<Double> similiraties) {
+    public void writeSimilarities(String projectMaster, LinkedList<Double> similiraties) {
 
-        File similarities = new File("files/similarities.csv");
-        FileOutputStream outputStream;
-        try {
-            String line = "";
+       try {
+            String line = projectMaster + ", ";
 
-            for (Project p : projects) {
-                line = p.getName() + ",";
-                for (double value : similiraties) {
-                    line += value + ",";
-                }
-                writer.write(line);
-                writer.newLine();
-                line = "";
+            for (double value : similiraties) {
+                line += value + ",";
             }
+            writer.append(line);
+            writer.append("\n");
             writer.close();
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
@@ -65,36 +59,75 @@ public class FileService {
     }
 
     public boolean isFileEmpty() throws FileNotFoundException, IOException {
-       String line;
-		if ((line = reader.readLine()) != null) {
-		        return false;
-                }else{
-                    return true;
-                }
+        String line;  
+        boolean empty;
+        reader = new BufferedReader(new FileReader("files/similarities.csv"));
+        if ((line = reader.readLine()) != null) {
+            empty = false;
+        } else {
+            empty = true;
+        }
+        reader.close();
+        return empty;
     }
 
     public void writeHeader(LinkedList<Project> projects) throws IOException {
-        String line = "           ,";
-        for (Project project: projects){
-            line = line + project.getName() + ",";
+        String line = "          ,";
+        for (Project project : projects) {
+                 line = line + project.getName() + ",";
         }
         writer.write(line);
-        writer.close();
+        writer.append("\n");
     }
 
     public boolean projectExistInFile(String name) throws IOException {
-        String line;
-        while (reader.readLine() !=null){
-            line = reader.readLine();
-            if (line.startsWith(name)){
+        String line;        
+        reader = new BufferedReader(new FileReader("files/similarities.csv"));
+        while ((line = reader.readLine()) != null) {
+            if (line.startsWith(name)) {
                 return true;
             }
         }
+        reader.close();
         return false;
     }
 
-    public void readSimilarities(String name) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public LinkedList<Double> readSimilarities(String name) throws IOException {        
+        reader = new BufferedReader(new FileReader("files/similarities.csv"));
+        String line = reader.readLine();
+        LinkedList<Double> similarities = new LinkedList<>();
+        while((line = reader.readLine())!=null){
+            if(line.startsWith(name)){
+                break;
+            }else{
+                line = null;
+                continue;
+            }
+        }        
+        
+        if (line !=null){
+            String[] sims =  line.substring(name.length()+1).split(",");
+            for(String s: sims){
+                similarities.add(Double.parseDouble(s));
+            }
+        }
+        
+        reader.close();
+        return similarities;
+    }
+    public LinkedList<String> readTitles() throws IOException {        
+        reader = new BufferedReader(new FileReader("files/similarities.csv"));
+        String line = reader.readLine();
+        LinkedList<String> titles = new LinkedList<>();
+        if (line !=null){
+            String[] sims =  line.substring(12).split(",");
+            for(String s: sims){
+                titles.add(s);
+            }
+        }
+        
+        reader.close();
+        return titles;
     }
 
 }

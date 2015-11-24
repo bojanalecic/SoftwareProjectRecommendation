@@ -36,7 +36,15 @@ public class PropertiesReader {
         return Integer.parseInt(prop.getProperty("numberOfWords"));
     }
     
+    public double getDescShare() {
+        return Double.parseDouble(prop.getProperty("description"));
+    }
     
+    public double getProgLangShare() {
+        return Double.parseDouble(prop.getProperty("programmingLanguage"));
+    }
     
-    
+    public double getOSShare() {
+        return Double.parseDouble(prop.getProperty("operatingSystem"));
+    }
 }

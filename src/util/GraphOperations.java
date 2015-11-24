@@ -132,17 +132,17 @@ public class GraphOperations {
         }
 
 //      Add name of project as keyword  
-        keywords.add(project.getName());
-
-//      Add programming languages as kreywords  
-        for (String lang : project.getProgramminglanguage()) {
-            keywords.add(lang);
-        }
-
-//      Add operating systems as keyword  
-        for (String os : project.getOs()) {
-            keywords.add(os);
-        }
+//        keywords.add(project.getName());
+//
+////      Add programming languages as kreywords  
+//        for (String lang : project.getProgramminglanguage()) {
+//            keywords.add(lang);
+//        }
+//
+////      Add operating systems as keyword  
+//        for (String os : project.getOs()) {
+//            keywords.add(os);
+//        }
         project.setKeywords(keywords);
     }
 
