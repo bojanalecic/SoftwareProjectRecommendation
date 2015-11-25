@@ -2,16 +2,16 @@
 ============
 # 1. About the project
 The idea of this project is recommendation of software projects based on user's past actions and preferences. The assumption is that user's preferences are already known. 
-The database - RDF file is already filled by extracting data about software projects from websites containing software application catalogs. Initially, project extracted data from the [Freecode](http://freecode.com/) website, and now it is expanded with data from [SourceForge](http://sourceforge.net)  website.
+The database - RDF file is already filled by extracting data about software projects from websites containing software application catalogs. Initially, project used data from the [Freecode](http://freecode.com/) website, and now it is expanded with data from [SourceForge](http://sourceforge.net)  website.
 
-When user enters username, prefrences are read from local file, similarity calculation engine calculates top5 most similar projects and recommend user to see those projects.
+When user enters username, prefrences are read from local file. Similarity calculation engine calculates top5 most similar projects and recommends user those projects.
 There are three criterias for project comparison: description of project, programming language in which project is developed and operating system. It is possible to configure how much each criteria affects similarity.
 
-Description of project firstly must be formatted and processed to be usefull for different calculation. The idea is to extract particular number of keywords from description. That number is also configurable. Process of keywords extraction follows those steps:
+Firstly, description of project must be formatted and processed to be usefull for different calculations. The idea is to extract particular number of keywords from description. That number is also configurable. Process of keywords extraction follows these steps:
 
 -Lower case all words in description
 
--Remove all words shoter than 3 characters
+-Remove all words shorter than 3 characters
 
 -Tag words to avoid using of verbs, adverbs, articles etc; only nouns and adjectives are useful
 
