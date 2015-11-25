@@ -1,4 +1,4 @@
-# SoftwareProjectRecommendation
+# Software Project Recommendation
 ============
 # 1. About the project
 The idea of this project is recommendation of software projects based on user's past actions and preferences. The assumption is that user's preferences are already known. 
