@@ -17,14 +17,14 @@ Firstly, description of project must be formatted and processed to be usefull fo
 
 -Remove stopwords
 
-When this process is finished, Graph is created from relevant words. For this purpose, [jung](http://jung.sourceforge.net/ ) library is used. For this purpose we use undirected graph since relation between words is not relevant in this case.
+When this process is finished, Graph is created from relevant words. For this purpose, [jung](http://jung.sourceforge.net/ ) library is used. We use undirected graph since relation between words is not relevant in this case.
 
-After creation of graph, nodes should be ranked. To rank nodes, different centrality measures can be used. In this project, degree centrality methos is used. After calculation of degrees, keywords are extracted.
-Similarities between projects are calculated based on those keywords by using the Cosine similarity metric. In order to calculate Cosine similarity for two projects, the preriquesite is to calculate TF-IDF (Term Frequency/Inverse Document Frequency) metric. This must be calculated for every keyword from project decsription. When TF-IDF is calculated for one project for one keyweord, it is possible to calculate Cosine Similarity.
+After creation of graph, nodes should be ranked. To rank nodes, different centrality measures can be used. In this project, degree centrality methos is found as most relevant. After calculation of degrees, keywords are extracted.
+Similarities between projects are calculated based on those keywords by using the Cosine similarity metric. In order to calculate Cosine similarity for two projects, the preriquesite is to calculate TF-IDF (Term Frequency/Inverse Document Frequency) metric. This must be calculated for every keyword from project decsription. When TF-IDF is calculated for one project for one keyword, it is possible to calculate Cosine Similarity.
 
-For programming language and operating system, method based on "match" is used. It only check if programming languag of one project matches the programming language of another. 
+For programming language and operating system, comparison is based on "match". It only checks if programming language of one project matches the programming language of another. The same applies for operating system. 
 
-At the end, all similarities - between description, programming language and operating system are sumerized and final value is calculated. Once similarity is calculated between given project and all other projects from database, it is stored in local CSV file. Every time, engine is run, it checks if similarities are already calculated; if so, program only reads from CSV file, extract TOP5 projects and displays recommendations to user.
+At the end, all similarities - between description, programming language and operating system are sumarized and final value is calculated. Once similarity is calculated between given project and all other projects from database, it is stored in local CSV file. Every time engine is run, it checks if similarities are already calculated; if so, program only reads from CSV file, extract TOP 5 projects and displays recommendations to user.
 
 # 2. Domain model
 
