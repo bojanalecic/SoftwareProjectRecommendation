@@ -8,9 +8,13 @@ When user enters username, prefrences are read from local file, similarity calcu
 There are three criterias for project comparison: description of project, programming language in which project is developed and operating system. It is possible to configure how much each criteria affects similarity.
 
 Description of project firstly must be formatted and processed to be usefull for different calculation. The idea is to extract particular number of keywords from description. That number is also configurable. Process of keywords extraction follows those steps:
+
 -Lower case all words in description
+
 -Remove all words shoter than 3 characters
+
 -Tag words to avoid using of verbs, adverbs, articles etc; only nouns and adjectives are useful
+
 -Remove stopwords
 
 When this process is finished, Graph is created from relevant words. For this purpose, [jung](http://jung.sourceforge.net/ ) library is used. For this purpose we use undirected graph since relation between words is not relevant in this case.
@@ -36,4 +40,49 @@ Class *Category* contains name and URI seeAlso.
 
 Class *Version* contains basic information of project release such as name, date when it is created, width, revision and description.
 
+# 3. The solution
+
+Application collects metadata about software projects from the websites [Freecode](http://freecode.com/) and [SourceForge](http://sourceforge.net). The data is extracted by the crawler and used for recommendation process.
+The application allows user to interact through console.
+
+-User enters username
+
+-User's preferences are read from local file
+
+-Check if similarities are already calculated for given project;if yes show TOP5 recommendations
+
+-Otherwise, start calculation service;
+
+-Store similarities in local CSV file
+
+-Display recommendations to user
+
+# 4. Technical realisation
+
+This application is written in programming language Java as console application.
+
+POS model and StopAnalyzer is used for tagging words in description and removing stopwords. It provides couple of methods for this purpose, and StopAnalyzer provides list of English sotpwords.
+
+[Jung](http://jung.sourceforge.net/ ) library is used for graph creation. In this case, undirected sparse graph is used.
+
+[TF/IDF](http://www.site.uottawa.ca/~diana/csi4107/cosine_tf_idf_example.pdf) and [Cosine Similarity](https://github.com/xiejuncs/cross-document-coreference-resolution/blob/master/util/CosineSimilarity.java) metrics are used for calculations.
+
+# 5. Acknowledgements
+
+This application has been developed as a part of the project assignment for the course [Intelligent Systems](http://is.fon.rs/) at the Faculty of Organization Sciences, University of Belgrade, Serbia.
+
+
+# 6. Licence
+
+This software is licensed under the MIT License.
+
+The MIT License (MIT)
+
+Copyright (c) 2015 Bojana Lecic - bojanalcc@gmail.com
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
