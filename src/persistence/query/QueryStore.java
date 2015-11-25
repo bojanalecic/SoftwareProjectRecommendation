@@ -31,8 +31,8 @@ public class QueryStore {
 
     public LinkedList<Project> returnProjectsList(SearchString ss) throws URISyntaxException, ParseException, java.text.ParseException {
 
-        String queryString =
-                "PREFIX rdfs: <" + Constants.RDF_NS + "> \n"
+        String queryString
+                = "PREFIX rdfs: <" + Constants.RDF_NS + "> \n"
                 + "PREFIX doap: <" + Constants.DOAP_NS + "> \n"
                 + "PREFIX foaf: <" + Constants.FOAF_NS + "> \n"
                 + "PREFIX dc: <" + Constants.DC_NS + "> \n"
@@ -89,7 +89,7 @@ public class QueryStore {
         }
 
         ResultsList projectList = queryExecutor.executeSelectSparqlQuery(queryString, RDFPersistance.getInstance().getDataModel());
-       LinkedList<Project> listProject = new LinkedList<Project>();
+        LinkedList<Project> listProject = new LinkedList<Project>();
 
         LinkedList<QueryResult> listaRez = (LinkedList<QueryResult>) projectList.getResultRecords();
 
@@ -114,7 +114,6 @@ public class QueryStore {
             Project pr = new Project();
             pr.setMaintainer(per);
             pr.setName(name.substring(0, name.indexOf("^^")));
-
 
             pr.setSeeAlso(new URI(seeAlso.replace("<", "").replace(">", "")));
             if (description != null) {
@@ -142,7 +141,6 @@ public class QueryStore {
             pr.setProgramminglanguages(getProgrammingLanguages(proj));
             pr.setRelease(getProjectVersionList(proj));
 
-
             listProject.add(pr);
         }
         return listProject;
@@ -152,8 +150,8 @@ public class QueryStore {
 
         Collection<String> nameList = new LinkedList<String>();
 
-        String queryString1 =
-                "PREFIX rdfs: <" + Constants.RDF_NS + "> \n"
+        String queryString1
+                = "PREFIX rdfs: <" + Constants.RDF_NS + "> \n"
                 + "PREFIX doap: <" + Constants.DOAP_NS + "> \n"
                 + "PREFIX foaf: <" + Constants.FOAF_NS + "> \n"
                 + "PREFIX dc: <" + Constants.DC_NS + "> \n"
@@ -172,8 +170,8 @@ public class QueryStore {
     private Collection<String> getProjectLicenses(String proj) {
         Collection<String> nameList = new LinkedList<String>();
 
-        String queryString1 =
-                "PREFIX rdfs: <" + Constants.RDF_NS + "> \n"
+        String queryString1
+                = "PREFIX rdfs: <" + Constants.RDF_NS + "> \n"
                 + "PREFIX doap: <" + Constants.DOAP_NS + "> \n"
                 + "PREFIX foaf: <" + Constants.FOAF_NS + "> \n"
                 + "PREFIX dc: <" + Constants.DC_NS + "> \n"
@@ -193,8 +191,8 @@ public class QueryStore {
 
         Collection<String> nameList = new LinkedList<String>();
 
-        String queryString1 =
-                "PREFIX rdfs: <" + Constants.RDF_NS + "> \n"
+        String queryString1
+                = "PREFIX rdfs: <" + Constants.RDF_NS + "> \n"
                 + "PREFIX doap: <" + Constants.DOAP_NS + "> \n"
                 + "PREFIX foaf: <" + Constants.FOAF_NS + "> \n"
                 + "PREFIX dc: <" + Constants.DC_NS + "> \n"
@@ -213,8 +211,8 @@ public class QueryStore {
     private Collection<String> getProgrammingLanguages(String proj) {
         Collection<String> nameList = new LinkedList<String>();
 
-        String queryString1 =
-                "PREFIX rdfs: <" + Constants.RDF_NS + "> \n"
+        String queryString1
+                = "PREFIX rdfs: <" + Constants.RDF_NS + "> \n"
                 + "PREFIX doap: <" + Constants.DOAP_NS + "> \n"
                 + "PREFIX foaf: <" + Constants.FOAF_NS + "> \n"
                 + "PREFIX dc: <" + Constants.DC_NS + "> \n"
@@ -231,8 +229,8 @@ public class QueryStore {
     }
 
     private Collection<Version> getProjectVersionList(String proj) throws URISyntaxException, ParseException, java.text.ParseException {
-        String queryString1 =
-                "PREFIX rdfs: <" + Constants.RDF_NS + "> \n"
+        String queryString1
+                = "PREFIX rdfs: <" + Constants.RDF_NS + "> \n"
                 + "PREFIX doap: <" + Constants.DOAP_NS + "> \n"
                 + "PREFIX foaf: <" + Constants.FOAF_NS + "> \n"
                 + "PREFIX dc: <" + Constants.DC_NS + "> \n"
@@ -280,8 +278,8 @@ public class QueryStore {
     }
 
     public Collection<String> getAllProgrammingLanguages() {
-        String queryString =
-                "PREFIX rdfs: <" + Constants.RDF_NS + "> \n"
+        String queryString
+                = "PREFIX rdfs: <" + Constants.RDF_NS + "> \n"
                 + "PREFIX doap: <" + Constants.DOAP_NS + "> \n"
                 + "PREFIX foaf: <" + Constants.FOAF_NS + "> \n"
                 + "PREFIX dc: <" + Constants.DC_NS + "> \n"
@@ -295,8 +293,8 @@ public class QueryStore {
     }
 
     public Collection<String> getAllTags() {
-        String queryString =
-                "PREFIX rdfs: <" + Constants.RDF_NS + "> \n"
+        String queryString
+                = "PREFIX rdfs: <" + Constants.RDF_NS + "> \n"
                 + "PREFIX doap: <" + Constants.DOAP_NS + "> \n"
                 + "PREFIX foaf: <" + Constants.FOAF_NS + "> \n"
                 + "PREFIX dc: <" + Constants.DC_NS + "> \n"
@@ -310,8 +308,8 @@ public class QueryStore {
     }
 
     public Collection<String> getAllLicenses() {
-        String queryString =
-                "PREFIX rdfs: <" + Constants.RDF_NS + "> \n"
+        String queryString
+                = "PREFIX rdfs: <" + Constants.RDF_NS + "> \n"
                 + "PREFIX doap: <" + Constants.DOAP_NS + "> \n"
                 + "PREFIX foaf: <" + Constants.FOAF_NS + "> \n"
                 + "PREFIX dc: <" + Constants.DC_NS + "> \n"
@@ -325,8 +323,8 @@ public class QueryStore {
     }
 
     public Collection<String> getAllOperatingSystems() {
-        String queryString =
-                "PREFIX rdfs: <" + Constants.RDF_NS + "> \n"
+        String queryString
+                = "PREFIX rdfs: <" + Constants.RDF_NS + "> \n"
                 + "PREFIX doap: <" + Constants.DOAP_NS + "> \n"
                 + "PREFIX foaf: <" + Constants.FOAF_NS + "> \n"
                 + "PREFIX dc: <" + Constants.DC_NS + "> \n"
@@ -338,11 +336,11 @@ public class QueryStore {
         return queryExecutor.executeOneVariableSelectSparqlQuery(queryString, "os",
                 RDFPersistance.getInstance().getDataModel());
     }
-    
+
     public LinkedList<Project> returnProjectsWithDescriptions() throws URISyntaxException, ParseException, java.text.ParseException {
 
-         String queryString =
-                "PREFIX rdfs: <" + Constants.RDF_NS + "> \n"
+        String queryString
+                = "PREFIX rdfs: <" + Constants.RDF_NS + "> \n"
                 + "PREFIX doap: <" + Constants.DOAP_NS + "> \n"
                 + "PREFIX foaf: <" + Constants.FOAF_NS + "> \n"
                 + "PREFIX dc: <" + Constants.DC_NS + "> \n"
@@ -358,18 +356,13 @@ public class QueryStore {
                 + "?maint rdfs:seeAlso ?maintsee. \n "
                 + "OPTIONAL {?proj doap:download-page ?down. }\n"
                 + "OPTIONAL {?proj doap:homepage ?home.}\n ";
-                
-        
+
         queryString = queryString + " }.";
-       
-        
-            queryString = queryString + " } ORDER BY ?name";
-       
-        
-             
+
+        queryString = queryString + " } ORDER BY ?name";
 
         ResultsList projectList = queryExecutor.executeSelectSparqlQuery(queryString, RDFPersistance.getInstance().getDataModel());
-       LinkedList<Project> listProject = new LinkedList<Project>();
+        LinkedList<Project> listProject = new LinkedList<Project>();
 
         LinkedList<QueryResult> listaRez = (LinkedList<QueryResult>) projectList.getResultRecords();
 
@@ -377,7 +370,7 @@ public class QueryStore {
             String name = queryResult.getQueryResult().get("name");
             String seeAlso = queryResult.getQueryResult().get("see");
             String description = queryResult.getQueryResult().get("desc");
-            if (description == ""){
+            if (description == "") {
                 continue;
             }
             String download = queryResult.getQueryResult().get("down");
@@ -397,7 +390,6 @@ public class QueryStore {
             Project pr = new Project();
             pr.setMaintainer(per);
             pr.setName(name.substring(0, name.indexOf("^^")));
-
 
             pr.setSeeAlso(new URI(seeAlso.replace("<", "").replace(">", "")));
             if (description != null) {
@@ -424,9 +416,17 @@ public class QueryStore {
             pr.setOs(getProjectOperatingSystems(proj));
             pr.setProgramminglanguages(getProgrammingLanguages(proj));
             pr.setRelease(getProjectVersionList(proj));
-
-
-            listProject.add(pr);
+            
+            boolean exist = false;
+            for(Project p: listProject){
+                if(p.getName().equalsIgnoreCase(pr.getName())){
+                    exist = true;
+                    break;
+                }else{
+                    continue;
+                }
+            }
+            if(!exist) listProject.add(pr);
         }
         return listProject;
     }
