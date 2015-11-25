@@ -10,6 +10,7 @@ import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.UndirectedSparseGraph;
 import edu.uci.ics.jung.graph.event.GraphEvent;
 import edu.uci.ics.jung.graph.event.GraphEvent.Edge;
+import edu.uci.ics.jung.graph.event.GraphEvent.Vertex;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -102,16 +103,11 @@ public class GraphOperations {
         LinkedHashMap<String, Double> degrees = new LinkedHashMap<String, Double>();
 
         Collection<String> vertices = g.getVertices();
-
+        
         for (String vertice : vertices) {
-//            Collection<Edge> edges = g.getIncidentEdges(vertice);
-            Collection<Edge> edges = g.getEdges();
-            double connectedNodes = 0;
-            for (Edge edge : edges) {
-                connectedNodes += (Integer) edge.getEdge();
-            }
             double numberOfNodes = g.getVertexCount();
-            double degreeCentrality = connectedNodes / numberOfNodes;
+            int degree = g.outDegree(vertice);
+            double degreeCentrality = degree / numberOfNodes;
             degrees.put(vertice, degreeCentrality);
         }
         LinkedList<String> keywords = new LinkedList<>();
@@ -131,18 +127,6 @@ public class GraphOperations {
             }
         }
 
-//      Add name of project as keyword  
-//        keywords.add(project.getName());
-//
-////      Add programming languages as kreywords  
-//        for (String lang : project.getProgramminglanguage()) {
-//            keywords.add(lang);
-//        }
-//
-////      Add operating systems as keyword  
-//        for (String os : project.getOs()) {
-//            keywords.add(os);
-//        }
         project.setKeywords(keywords);
     }
 

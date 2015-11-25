@@ -120,7 +120,7 @@ public class FileService {
         String line = reader.readLine();
         LinkedList<String> titles = new LinkedList<>();
         if (line !=null){
-            String[] sims =  line.substring(12).split(",");
+            String[] sims =  line.substring(11).split(",");
             for(String s: sims){
                 titles.add(s);
             }

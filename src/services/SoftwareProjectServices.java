@@ -17,10 +17,13 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import persistence.query.QueryStore;
 import softwareprojects.SoftwareProjects;
 import util.GraphOperations;
 import util.StringOperations;
+import util.ValueComparator;
 
 /**
  *
@@ -118,5 +121,33 @@ public class SoftwareProjectServices {
             }
         }
         return sims;
+    }
+
+    public static LinkedList<String> findMostSimilar(LinkedList<Double> similarities, LinkedList<String> titles) {
+        double max = 0;
+        HashMap<String, Double> map = new HashMap<>();
+        LinkedList<String> winners = new LinkedList<String>();
+        String winner = "";
+        for (int i = 0; i < similarities.size(); i++) {
+            map.put(titles.get(i), similarities.get(i));
+
+        }
+        ValueComparator bvc = new ValueComparator(map);
+        TreeMap<String, Double> sorted_map = new TreeMap<String, Double>(bvc);
+
+        sorted_map.putAll(map);
+        int counter = 0;
+        for (Map.Entry<String, Double> entrySet : sorted_map.entrySet()) {
+            String key = entrySet.getKey();
+            Double value = entrySet.getValue();
+            if (value == 1) continue;
+            winners.add(key);
+            counter++;
+            if (counter == 5) {
+                break;
+            }
+        }
+
+        return winners;
     }
 }

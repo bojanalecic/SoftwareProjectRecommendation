@@ -76,21 +76,14 @@ public class SoftwareProjects {
                 similarities = SoftwareProjectServices.calculateSimilarities(projectMaster, projectsWithDesc);
                 fs.writeSimilarities(projectMaster.getName(), similarities);
             }
-            double max = 0;
-            String winner = "";
 
             LinkedList<String> titles = fs.readTitles();
-
-//         Find maximum value in similarities  
-            for (int i = 0; i < similarities.size(); i++) {
-                if (max < similarities.get(i) && similarities.get(i) != 1) {
-                    max = similarities.get(i);
-                    winner = titles.get(i);
-                }
-
+            titles = SoftwareProjectServices.findMostSimilar(similarities, titles);
+            String output = "You should see also: ";
+            for (String title : titles) {
+                output = output + title + ", ";
             }
-            System.out.println("You should see also: " + winner);
-
+            System.out.println(output);
         } catch (Exception ex) {
             Logger.getLogger(SoftwareProjects.class.getName()).log(Level.SEVERE, null, ex);
         }

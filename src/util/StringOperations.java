@@ -58,11 +58,12 @@ public class StringOperations {
             
             description = description.toLowerCase();
 
-            LinkedList<String> resultAfterTagging = tagWords(description);
-
             String[] words = description.split("\\s+");
-            LinkedList<String> result = removeShortWords(words);
+            String[] result = removeShortWords(words);
 
+            LinkedList<String> resultAfterTagging = tagWords(result);
+
+            
             LinkedList<String> relevantWords = removeStopWords(resultAfterTagging);
 
             project.setRelevantWords(relevantWords);
@@ -101,25 +102,28 @@ public class StringOperations {
         return finalResult;
     }
 
-    private LinkedList<String> removeShortWords(String[] source) {
+    private String[] removeShortWords(String[] source) {
         LinkedList<String> result = new LinkedList<String>();
+       
         for (int i = 0; i < source.length; i++) {
             if (source[i].length() > 2) {
                 result.add(source[i]);
             }
         }
-        return result;
+        String[] finalResult = new String[result.size()];
+        for(int i = 0; i < result.size(); i++){
+            finalResult[i] = result.get(i);
+        }
+        return finalResult;
     }
 
-    private LinkedList<String> tagWords(String source) {
+    private LinkedList<String> tagWords(String[] source) {
         LinkedList<String> result = new LinkedList<String>();
         try {
-            String[] words = source.split("\\s+");
-
-            String tags[] = tagger.tag(words);
+            String tags[] = tagger.tag(source);
             for (int i = 0; i < tags.length; i++) {
                 if (tags[i].equals("JJ") || tags[i].equals("NN") || tags[i].equals("NNS") || tags[i].equals("NNP") || tags[i].equals("NNPS")) {
-                    result.add(words[i]);
+                    result.add(source[i]);
                 }
             }
 
