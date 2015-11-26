@@ -1,30 +1,41 @@
 # Software Project Recommendation
 ============
 # 1. About the project
-The idea of this project is recommendation of software projects based on user's past actions and preferences. The assumption is that user's preferences are already known. 
-The database - RDF file is already filled by extracting data about software projects from websites containing software application catalogs. Initially, project used data from the [Freecode](http://freecode.com/) website, and now it is expanded with data from [SourceForge](http://sourceforge.net)  website.
+The idea of this project is recommendation of software projects based on user's past actions and preferences. The assumption is that user's preferences are already known. The data repository (an- RDF file) is already filled by extracting data about software projects from websites containing software application catalogs. Initially, project used data from the Freecode website, and now it is expanded with data from SourceForge website.
 
-When user enters username, prefrences are read from local file. Similarity calculation engine calculates top5 most similar projects and recommends user those projects.
-There are three criterias for project comparison: description of project, programming language in which project is developed and operating system. It is possible to configure how much each criteria affects similarity.
+When user enters username, prefrences are read from local file (currently user preferences are reduced to the software project the user has recently expressed interest in). Similarity calculation engine calculates top 5 most similar projects to the user's preffered project and recommends those projects to the user.
+There are three criterias for project comparison: description of project, programming language in which project is developed and operating system. It is possible to configure (via the properties file) how much each criteria affects similarity.
 
-Firstly, description of project must be formatted and processed to be usefull for different calculations. The idea is to extract particular number of keywords from description. That number is also configurable. Process of keywords extraction follows these steps:
+To be used for recommendation purposes, descriptions of projects must be formatted and processed to be usefull for different calculations. The idea is to extract particular number of keywords from each description. The name of project is added to the description as it could be used as keyword also.  The number of keywords is also configurable (through the properties file). The process of keywords extraction follows these steps:
 
--Lower case all words in description
+-Lower case all words in a description
 
 -Remove all words shorter than 3 characters
 
--Tag words to avoid using of verbs, adverbs, articles etc; only nouns and adjectives are useful
+-POS-tag words to avoid using of verbs, adverbs, articles, etc.; only nouns and adjectives are considered useful
 
--Remove stopwords
+-Remove stop-words
 
-When this process is finished, Graph is created from relevant words. For this purpose, [jung](http://jung.sourceforge.net/ ) library is used. We use undirected graph since relation between words is not relevant in this case.
+When this process is finished, Graph is created from relevant words. For this purpose, [jung](http://jung.sourceforge.net/ ) library is used. We use weighted undirected graph since relation between words is not relevant in this case. Every word from list of relevant words extracted in previos step is one node in the graph. Edges correspond to unique bigrams. More precisely, if word w1 immediately preceded word w2 in the processed document, then an edge w1 − w2 was added to the network. If the same relation occurs again, the edge weight is increased.For more details, please see the document used as reference: [Keyword and Keyphrase Extraction Using Centrality Measures on Collocation Networks](http://arxiv.org/pdf/1401.6571v1.pdf).
 
-After creation of graph, nodes should be ranked. To rank nodes, different centrality measures can be used. In this project, degree centrality methos is found as most relevant. After calculation of degrees, keywords are extracted.
-Similarities between projects are calculated based on those keywords by using the Cosine similarity metric. In order to calculate Cosine similarity for two projects, the preriquesite is to calculate TF-IDF (Term Frequency/Inverse Document Frequency) metric. This must be calculated for every keyword from project decsription. When TF-IDF is calculated for one project for one keyword, it is possible to calculate Cosine Similarity.
+After creation of graph, nodes should be ranked. To rank nodes, different centrality measures can be used. In this project, degree centrality method is found as most relevant. This method uses number of edges incident to a node to calculate rank of the node. After calculation of node rank, that value is divided by number of nodes. With finishing this step, we have degrees for all relevant words. In the next step, degrees are sorted by using Comparator interface. Once we have sorted map of words and corresponding degrees, we set first N words as keywords for given project.
 
-For programming language and operating system, comparison is based on "match". It only checks if programming language of one project matches the programming language of another. The same applies for operating system. 
+Similarities between projects are calculated based on those keywords by using the Cosine similarity metric. In order to calculate Cosine similarity for two projects, the prerequisite is to calculate TF-IDF (Term Frequency/Inverse Document Frequency) metric for each project (i.e., its textual representation). This metric must be calculated for every keyword extracted from project's decsription and title. By using this [document](http://www.site.uottawa.ca/~diana/csi4107/cosine_tf_idf_example.pdf) as refernce, next steps are followed:
 
-At the end, all similarities - between description, programming language and operating system are sumarized and final value is calculated. Once similarity is calculated between given project and all other projects from database, it is stored in local CSV file. Every time engine is run, it checks if similarities are already calculated; if so, program only reads from CSV file, extract TOP 5 projects and displays recommendations to user.
+-we calculate the term frequency for all the words as number of occurences in each particular project
+
+- in order to calculate IDF we count number of projects in which particular word appears; then we use following formula to calculate idf:  idf = 1 + Math.log(projects.size() / occurrences);
+
+- When computing the tf-idf values for the words we divide the frequency by the maximum frequency  (number of projects) and multiply with the idf values; the result is tf/idf metric for each keyword per project (matrix). 
+
+-Calculate Length for each project by using formula  
+
+When TF-IDF is calculated, it is possible to calculate Cosine Similarity. Formula used for calculating Cosine Similarity is:
+Cosine Similarity (d1, d2) =  Dot product(d1, d2) / ||d1|| * ||d2||
+
+For programming language and operating system, comparison is based on "matching". It is only checked if the programming language of one project matches the programming language of another. The same applies to the operating system. 
+
+At the end, all similarities - between description, programming language and operating system - are summarized and the final similarity value is calculated. Once similarities are calculated between the given project and all other projects from the database, they are stored in a local CSV file (similarities.csv). Every time the program is run, it checks if similarities for the given project are already calculated; if so, the program only reads them from the CSV file, extract TOP 5 projects and displays recommendations to the user.
 
 # 2. Domain model
 
@@ -42,26 +53,28 @@ Class *Version* contains basic information of project release such as name, date
 
 # 3. The solution
 
-Application collects metadata about software projects from the websites [Freecode](http://freecode.com/) and [SourceForge](http://sourceforge.net). The data is extracted by the crawler and used for recommendation process.
+The application collects metadata about software projects from the websites [Freecode](http://freecode.com/) and [SourceForge](http://sourceforge.net). The data is extracted by the crawler and used for recommendation process.
 The application allows user to interact through console.
 
 -User enters username
 
--User's preferences are read from local file
+-User's preferences (currently user preferences are reduced to the software project the user has recently expressed interest in) are read from local file (userPref.csv)
 
--Check if similarities are already calculated for given project;if yes show TOP5 recommendations
+-Check if similarities are already calculated for the given project;
 
--Otherwise, start calculation service;
+    -if yes, show TOP 5 recommendations;
+    
+    -Otherwise, start the calculation service;
 
--Store similarities in local CSV file
+-Store the computed similarities in the local CSV file;
 
--Display recommendations to user
+-Display recommendations to the user
 
 # 4. Technical realisation
 
-This application is written in programming language Java as console application.
+This application is written in programming language Java as a console application.
 
-POS model and StopAnalyzer is used for tagging words in description and removing stopwords. It provides couple of methods for this purpose, and StopAnalyzer provides list of English sotpwords.
+POS model and StopAnalyzer from the OpenNLP tools are used for tagging words in description and removing stop-words. It provides couple of methods for this purpose, and StopAnalyzer provides list of English stop-words.
 
 [Jung](http://jung.sourceforge.net/ ) library is used for graph creation. In this case, undirected sparse graph is used.
 
@@ -69,7 +82,7 @@ POS model and StopAnalyzer is used for tagging words in description and removing
 
 # 5. Acknowledgements
 
-This application has been developed as a part of the project assignment for the course [Intelligent Systems](http://is.fon.rs/) at the Faculty of Organization Sciences, University of Belgrade, Serbia.
+This application has been developed as a part of the project assignment for the course [Intelligent Systems](http://ai.fon.bg.ac.rs/osnovne/inteligentni-sistemi/) at the Faculty of Organization Sciences, University of Belgrade, Serbia.
 
 
 # 6. Licence
