@@ -9,11 +9,8 @@ There are three criterias for project comparison: description of project, progra
 To be used for recommendation purposes, descriptions of projects must be formatted and processed to be usefull for different calculations. The idea is to extract particular number of keywords from each description. The name of project is added to the description as it could be used as keyword also.  The number of keywords is also configurable (through the properties file). The process of keywords extraction follows these steps:
 
 - Lower case all words in a description
-
 - Remove all words shorter than 3 characters
-
 - POS-tag words to avoid using of verbs, adverbs, articles, etc.; only nouns and adjectives are considered useful
-
 - Remove stop-words
 
 When this process is finished, Graph is created from relevant words. For this purpose, [jung](http://jung.sourceforge.net/ ) library is used. We use weighted undirected graph since relation between words is not relevant in this case. Every word from list of relevant words extracted in previos step is one node in the graph. Edges correspond to unique bigrams. More precisely, if word w1 immediately preceded word w2 in the processed document, then an edge w1 − w2 was added to the network. If the same relation occurs again, the edge weight is increased.For more details, please see the document used as reference: [Keyword and Keyphrase Extraction Using Centrality Measures on Collocation Networks](http://arxiv.org/pdf/1401.6571v1.pdf).
