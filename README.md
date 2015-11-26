@@ -8,13 +8,13 @@ There are three criterias for project comparison: description of project, progra
 
 To be used for recommendation purposes, descriptions of projects must be formatted and processed to be usefull for different calculations. The idea is to extract particular number of keywords from each description. The name of project is added to the description as it could be used as keyword also.  The number of keywords is also configurable (through the properties file). The process of keywords extraction follows these steps:
 
--Lower case all words in a description
+- Lower case all words in a description
 
--Remove all words shorter than 3 characters
+- Remove all words shorter than 3 characters
 
--POS-tag words to avoid using of verbs, adverbs, articles, etc.; only nouns and adjectives are considered useful
+- POS-tag words to avoid using of verbs, adverbs, articles, etc.; only nouns and adjectives are considered useful
 
--Remove stop-words
+- Remove stop-words
 
 When this process is finished, Graph is created from relevant words. For this purpose, [jung](http://jung.sourceforge.net/ ) library is used. We use weighted undirected graph since relation between words is not relevant in this case. Every word from list of relevant words extracted in previos step is one node in the graph. Edges correspond to unique bigrams. More precisely, if word w1 immediately preceded word w2 in the processed document, then an edge w1 − w2 was added to the network. If the same relation occurs again, the edge weight is increased.For more details, please see the document used as reference: [Keyword and Keyphrase Extraction Using Centrality Measures on Collocation Networks](http://arxiv.org/pdf/1401.6571v1.pdf).
 
@@ -22,13 +22,12 @@ After creation of graph, nodes should be ranked. To rank nodes, different centra
 
 Similarities between projects are calculated based on those keywords by using the Cosine similarity metric. In order to calculate Cosine similarity for two projects, the prerequisite is to calculate TF-IDF (Term Frequency/Inverse Document Frequency) metric for each project (i.e., its textual representation). This metric must be calculated for every keyword extracted from project's decsription and title. By using this [document](http://www.site.uottawa.ca/~diana/csi4107/cosine_tf_idf_example.pdf) as reference, next steps are followed:
 
--we calculate the term frequency for all the words as number of occurences in each particular project
-
-- in order to calculate IDF we count number of projects in which particular word appears; then we use following formula to calculate idf:  idf = 1 + Math.log(projects.size() / occurrences);
+- We calculate the term frequency for all the words as number of occurences in each particular project
+- In order to calculate IDF we count number of projects in which particular word appears; then we use following formula to calculate idf:  idf = 1 + Math.log(projects.size() / occurrences);
 
 - When computing the tf-idf values for the words we divide the frequency by the maximum frequency  (number of projects) and multiply with the idf values; the result is tf/idf metric for each keyword per project (matrix). 
 
--Calculate Length for each project by using formula  
+- Calculate Length for each project by using formula  
 
 When TF-IDF is calculated, it is possible to calculate Cosine Similarity. Formula used for calculating Cosine Similarity is:
 Cosine Similarity (d1, d2) =  Dot product(d1, d2) / ||d1|| * ||d2||
@@ -56,19 +55,19 @@ Class *Version* contains basic information of project release such as name, date
 The application collects metadata about software projects from the websites [Freecode](http://freecode.com/) and [SourceForge](http://sourceforge.net). The data is extracted by the crawler and used for recommendation process.
 The application allows user to interact through console.
 
--User enters username
+- User enters username
 
--User's preferences (currently user preferences are reduced to the software project the user has recently expressed interest in) are read from local file (userPref.csv)
+- User's preferences (currently user preferences are reduced to the software project the user has recently expressed interest in) are read from local file (userPref.csv)
 
--Check if similarities are already calculated for the given project;
+- Check if similarities are already calculated for the given project;
 
-    -if yes, show TOP 5 recommendations;
+    - If yes, show TOP 5 recommendations;
     
-    -Otherwise, start the calculation service;
+    - Otherwise, start the calculation service;
 
--Store the computed similarities in the local CSV file;
+- Store the computed similarities in the local CSV file;
 
--Display recommendations to the user
+- Display recommendations to the user
 
 # 4. Technical realisation
 
