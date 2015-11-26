@@ -1,9 +1,9 @@
 # Software Project Recommendation
 ============
 # 1. About the project
-The idea of this project is recommendation of software projects based on user's past actions and preferences. The assumption is that user's preferences are already known. The data repository (an- RDF file) is already filled by extracting data about software projects from websites containing software application catalogs. Initially, project used data from the Freecode website, and now it is expanded with data from SourceForge website.
+The idea of this project is recommendation of software projects based on user's past actions and preferences. The assumption is that user's preferences are already known (currently user preferences are reduced to the software project the user has recently expressed interest in). The data repository (an- RDF file) is already filled by extracting data about software projects from websites containing software application catalogs. Initially, project used data from the Freecode website, and now it is expanded with data from SourceForge website.
 
-When user enters username, prefrences are read from local file (currently user preferences are reduced to the software project the user has recently expressed interest in). Similarity calculation engine calculates top 5 most similar projects to the user's preffered project and recommends those projects to the user.
+When user enters username, prefrences are read from local file. Similarity calculation engine calculates top 5 most similar projects to the user's preffered project and recommends those projects to the user.
 There are three criterias for project comparison: description of project, programming language in which project is developed and operating system. It is possible to configure (via the properties file) how much each criteria affects similarity.
 
 To be used for recommendation purposes, descriptions of projects must be formatted and processed to be usefull for different calculations. The idea is to extract particular number of keywords from each description. The name of project is added to the description as it could be used as keyword also.  The number of keywords is also configurable (through the properties file). The process of keywords extraction follows these steps:
@@ -20,7 +20,7 @@ When this process is finished, Graph is created from relevant words. For this pu
 
 After creation of graph, nodes should be ranked. To rank nodes, different centrality measures can be used. In this project, degree centrality method is found as most relevant. This method uses number of edges incident to a node to calculate rank of the node. After calculation of node rank, that value is divided by number of nodes. With finishing this step, we have degrees for all relevant words. In the next step, degrees are sorted by using Comparator interface. Once we have sorted map of words and corresponding degrees, we set first N words as keywords for given project.
 
-Similarities between projects are calculated based on those keywords by using the Cosine similarity metric. In order to calculate Cosine similarity for two projects, the prerequisite is to calculate TF-IDF (Term Frequency/Inverse Document Frequency) metric for each project (i.e., its textual representation). This metric must be calculated for every keyword extracted from project's decsription and title. By using this [document](http://www.site.uottawa.ca/~diana/csi4107/cosine_tf_idf_example.pdf) as refernce, next steps are followed:
+Similarities between projects are calculated based on those keywords by using the Cosine similarity metric. In order to calculate Cosine similarity for two projects, the prerequisite is to calculate TF-IDF (Term Frequency/Inverse Document Frequency) metric for each project (i.e., its textual representation). This metric must be calculated for every keyword extracted from project's decsription and title. By using this [document](http://www.site.uottawa.ca/~diana/csi4107/cosine_tf_idf_example.pdf) as reference, next steps are followed:
 
 -we calculate the term frequency for all the words as number of occurences in each particular project
 
