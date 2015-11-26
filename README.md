@@ -21,9 +21,7 @@ Similarities between projects are calculated based on those keywords by using th
 
 - We calculate the term frequency for all the words as number of occurences in each particular project
 - In order to calculate IDF we count number of projects in which particular word appears; then we use following formula to calculate idf:  idf = 1 + Math.log(projects.size() / occurrences);
-
 - When computing the tf-idf values for the words we divide the frequency by the maximum frequency  (number of projects) and multiply with the idf values; the result is tf/idf metric for each keyword per project (matrix). 
-
 - Calculate Length for each project by using formula  
 
 When TF-IDF is calculated, it is possible to calculate Cosine Similarity. Formula used for calculating Cosine Similarity is:
@@ -53,17 +51,11 @@ The application collects metadata about software projects from the websites [Fre
 The application allows user to interact through console.
 
 - User enters username
-
 - User's preferences (currently user preferences are reduced to the software project the user has recently expressed interest in) are read from local file (userPref.csv)
-
 - Check if similarities are already calculated for the given project;
-
     - If yes, show TOP 5 recommendations;
-    
     - Otherwise, start the calculation service;
-
 - Store the computed similarities in the local CSV file;
-
 - Display recommendations to the user
 
 # 4. Technical realisation
